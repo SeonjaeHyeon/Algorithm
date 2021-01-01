@@ -16,27 +16,52 @@ phone_book의 길이는 1 이상 1,000,000 이하입니다.
 각 전화번호의 길이는 1 이상 20 이하입니다.
 */
 
-import java.util.*;
-
+// startsWith() 사용
 class Solution {
     public boolean solution(String[] phone_book) {
         boolean answer = true;
-        HashMap<String, Integer> data = new HashMap<>();
-        
-        for (String e: phone_book) {
-            data.put(e, 1);
-        }
-        
-        Set<String> keys = data.keySet();
-        
-        for (String i: keys) {
-            for (String j: keys) {
-                if (!i.equals(j) && i.startsWith(j)) {
+
+        for (int i = 0; i < phone_book.length; i++) {
+            for (int j = i + 1; j < phone_book.length; j++) {
+                if (phone_book[i].startsWith(phone_book[j])) {
+                    return false;
+                }
+
+                if (phone_book[j].startsWith(phone_book[i])) {
                     return false;
                 }
             }
         }
-        
+
+        return answer;
+    }
+}
+
+// hashCode()와 substring() 사용 (해시 풀이)
+class Solution2 {
+    public boolean solution(String[] phone_book) {
+        boolean answer = true;
+
+        for (int i = 0; i < phone_book.length; i++) {
+            String first = phone_book[i];
+            int firstHash = first.hashCode();
+            int firstLen = first.length();
+
+            for (int j = i + 1; j < phone_book.length; j++) {
+                String second = phone_book[j];
+                int secondHash = second.hashCode();
+                int secondLen = second.length();
+
+                if (firstLen >= secondLen && secondHash == first.substring(0, secondLen).hashCode()) {
+                    return false;
+                }
+
+                if (firstLen < secondLen && firstHash == second.substring(0, firstLen).hashCode()) {
+                    return false;
+                }
+            }
+        }
+
         return answer;
     }
 }
